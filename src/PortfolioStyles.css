@@ -1,0 +1,579 @@
+/* src/PortfolioStyles.css */
+
+/* --- 基础配置 --- */
+.app-container {
+    min-height: 100vh;
+    background-color: #e8e4dc; /* 浅米色背景 */
+    font-family: sans-serif;
+    color: #475569; /* slate-800 */
+    /* 移除 selection:bg-orange-200，需要在全局CSS设置 */
+}
+
+/* --- 头部 Header --- */
+.header-area {
+    padding-top: 4rem; /* pt-16 */
+    padding-bottom: 2rem; /* pb-8 */
+    text-align: center;
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem; /* px-4 */
+}
+
+.header-title {
+    font-size: 2.25rem; /* text-4xl */
+    line-height: 2.5rem;
+    font-family: serif;
+    font-weight: 700; /* font-bold */
+    color: #3e2723; /* 深棕色 */
+    margin-bottom: 1rem; /* mb-4 */
+}
+@media (min-width: 768px) {
+    .header-title {
+        font-size: 3rem; /* md:text-5xl */
+    }
+    .header-text-hidden-md {
+        display: block;
+    }
+}
+
+.header-paragraph {
+    color: #5d4037;
+    max-width: 36rem; /* max-w-xl */
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.125rem; /* text-lg */
+    opacity: 0.8;
+}
+
+/* --- 主内容 Main --- */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 2rem; /* py-8 */
+    padding-bottom: 2rem; /* py-8 */
+    overflow-x: hidden;
+}
+
+/* --- 书架 Shelf --- */
+.shelf-container {
+    position: relative;
+    width: 100%;
+    max-width: 72rem; /* max-w-6xl */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 4rem; /* mb-16 */
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem; /* px-4 */
+}
+@media (min-width: 768px) {
+    .shelf-container {
+        padding-left: 3rem; /* md:px-12 */
+        padding-right: 3rem; /* md:px-12 */
+    }
+}
+
+.shelf-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    min-height: 260px;
+    padding-bottom: 0.5rem;
+    position: relative;
+    z-index: 10;
+    gap: 0.5rem;
+}
+
+/* 木质书架视觉效果 */
+.shelf-wood {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2rem; /* h-8 */
+    background-color: #5d4037; /* bg-[#5d4037] */
+    border-radius: 0.125rem; /* rounded-sm */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+    transform: skewX(6deg); /* transform skew-x-6 */
+    transform-origin: bottom left; /* origin-bottom-left */
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.shelf-gradient {
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to bottom, #8d6e63, #4e342e);
+    opacity: 0.9;
+}
+.shelf-grain {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+    opacity: 0.3;
+    mix-blend-mode: multiply;
+}
+.shelf-shadow {
+    position: absolute;
+    bottom: -1.5rem; /* -bottom-6 */
+    left: 0.5rem; /* left-2 */
+    right: 0.5rem; /* right-2 */
+    height: 1.5rem; /* h-6 */
+    background-color: rgba(0, 0, 0, 0.2); /* bg-black/20 */
+    filter: blur(8px); /* blur-md */
+    border-radius: 9999px; /* rounded-full */
+}
+
+/* --- 书籍 Book 组件 --- */
+.book-card {
+    position: relative;
+    width: 6rem; /* w-24 */
+    height: 10rem; /* h-40 */
+    cursor: pointer;
+    perspective: 1000px; /* perspective-1000 */
+    margin-left: 0.5rem; /* mx-2 */
+    margin-right: 0.5rem; /* mx-2 */
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: transform 300ms;
+    transform-origin: bottom;
+    flex-shrink: 0;
+}
+.book-card:hover {
+    transform: translateY(-1rem); /* hover:-translate-y-4 */
+}
+@media (min-width: 768px) {
+    .book-card {
+        width: 8rem; /* md:w-32 */
+        height: 13rem; /* md:h-52 */
+        margin-left: 1rem; /* md:mx-4 */
+        margin-right: 1rem; /* md:mx-4 */
+    }
+}
+@media (min-width: 1024px) {
+    .book-card {
+        width: 9rem; /* lg:w-36 */
+        height: 14rem; /* lg:h-56 */
+    }
+}
+
+/* 书脊 Spine */
+.book-spine {
+    position: absolute;
+    left: 0;
+    top: 0.25rem; /* top-1 */
+    height: 98%; /* h-[98%] */
+    width: 1rem; /* w-4 */
+    transform: translateX(-0.75rem) translateZ(-10px) rotateY(-20deg); /* -translate-x-3 translate-z-[-10px] rotate-y-[-20deg] */
+    border-top-left-radius: 0.125rem; /* rounded-l-sm */
+    border-bottom-left-radius: 0.125rem; /* rounded-l-sm */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); /* shadow-lg */
+    transform-origin: right;
+}
+
+/* 书籍封面 Cover */
+.book-cover {
+    position: absolute;
+    inset: 0;
+    border-top-right-radius: 0.375rem; /* rounded-r-md */
+    border-bottom-right-radius: 0.375rem; /* rounded-r-md */
+    border-top-left-radius: 0.125rem; /* rounded-l-sm */
+    border-bottom-left-radius: 0.125rem; /* rounded-l-sm */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* shadow-xl */
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem; /* p-3 */
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    transform-style: preserve-3d;
+    transition: transform 300ms;
+    border-left: 2px solid rgba(255, 255, 255, 0.1); /* border-l-2 border-white/10 */
+}
+.book-card:hover .book-cover {
+    transform: rotateY(-10deg); /* group-hover:rotate-y-[-10deg] */
+}
+@media (min-width: 768px) {
+    .book-cover {
+        padding: 1rem; /* md:p-4 */
+    }
+}
+
+/* 封面顶部装饰 */
+.cover-top-deco {
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* border-t border-white/20 */
+    padding-top: 0.25rem; /* pt-1 */
+}
+@media (min-width: 768px) {
+    .cover-top-deco {
+        padding-top: 0.5rem; /* md:pt-2 */
+    }
+}
+
+.cover-category {
+    font-size: 9px; /* text-[9px] */
+    color: rgba(255, 255, 255, 0.6); /* text-white/60 */
+    text-transform: uppercase;
+    letter-spacing: 0.1em; /* tracking-widest */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    width: 100%;
+}
+@media (min-width: 768px) {
+    .cover-category {
+        font-size: 10px; /* md:text-[10px] */
+    }
+}
+
+/* 封面图标 */
+.cover-icon-wrapper {
+    transform: scale(0.75); /* scale-75 */
+    transition: transform 300ms;
+}
+.book-card:hover .cover-icon-wrapper {
+    transform: scale(1.1); /* group-hover:scale-110 */
+}
+@media (min-width: 768px) {
+    .cover-icon-wrapper {
+        transform: scale(1); /* md:scale-100 */
+    }
+}
+
+/* 封面标题 */
+.cover-title-wrapper {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* border-b border-white/20 */
+    padding-bottom: 0.5rem; /* pb-2 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem; /* h-12 */
+}
+.cover-title {
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 700; /* font-bold */
+    color: white;
+    line-height: 1.25; /* leading-tight */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* line-clamp-2 */
+    overflow: hidden;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* drop-shadow-md */
+}
+@media (min-width: 768px) {
+    .cover-title {
+        font-size: 0.875rem; /* md:text-sm */
+    }
+}
+
+/* 页面侧边效果 */
+.book-pages-effect {
+    position: absolute;
+    bottom: 0.25rem; /* bottom-1 */
+    right: 0.25rem; /* right-1 */
+    left: 0.5rem; /* left-2 */
+    height: 0.75rem; /* h-3 */
+    background-color: white;
+    border-top-right-radius: 0.125rem; /* rounded-r-sm */
+    z-index: -1;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* shadow-inner */
+}
+
+/* --- Project Detail 详情页 --- */
+.detail-container {
+    min-height: 100vh;
+    background-color: #f5f5f7; /* bg-[#f5f5f7] */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 0.3s forwards;
+}
+
+/* 详情页导航栏 */
+.detail-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* bg-white/80 */
+    backdrop-filter: blur(8px); /* backdrop-blur-md */
+    border-bottom: 1px solid #e5e7eb; /* border-b border-gray-200 */
+    height: 4rem; /* h-16 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem; /* px-4 */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+}
+
+.detail-nav-content {
+    width: 100%;
+    max-width: 1440px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.detail-back-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* gap-2 */
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    border-radius: 9999px; /* rounded-full */
+    color: #4b5563; /* text-gray-700 */
+    font-weight: 500; /* font-medium */
+    transition: background-color 150ms;
+}
+.detail-back-button:hover {
+    background-color: #f3f4f6; /* hover:bg-gray-100 */
+}
+.detail-back-text {
+    display: none;
+}
+@media (min-width: 640px) {
+    .detail-back-text {
+        display: inline;
+    }
+}
+
+.detail-nav-title {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 700; /* font-bold */
+    color: #1f2937; /* text-gray-900 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 28rem; /* max-w-md */
+}
+
+.detail-spacer {
+    width: 5rem; /* w-20 */
+}
+
+/* 详情页 Hero Area */
+.detail-hero {
+    width: 100%;
+    background-color: white;
+    padding-top: 4rem; /* py-16 */
+    padding-bottom: 4rem; /* py-16 */
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem; /* px-4 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+@media (min-width: 768px) {
+    .detail-hero {
+        padding-top: 6rem; /* md:py-24 */
+        padding-bottom: 6rem; /* md:py-24 */
+    }
+}
+
+.detail-hero-title {
+    font-size: 1.875rem; /* text-3xl */
+    line-height: 2.25rem;
+    font-weight: 700; /* font-bold */
+    color: #1f2937; /* text-gray-900 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+@media (min-width: 768px) {
+    .detail-hero-title {
+        font-size: 3rem; /* md:text-5xl */
+    }
+}
+
+.detail-hero-desc {
+    font-size: 1.125rem; /* text-lg */
+    color: #4b5563; /* text-gray-600 */
+    max-width: 42rem; /* max-w-2xl */
+    line-height: 1.625; /* leading-relaxed */
+}
+
+.detail-hero-tags {
+    margin-top: 2rem; /* mt-8 */
+    display: flex;
+    gap: 0.75rem; /* gap-3 */
+}
+
+.tag-item {
+    padding: 0.25rem 0.75rem; /* px-3 py-1 */
+    background-color: #f3f4f6; /* bg-gray-100 */
+    border-radius: 0.375rem; /* rounded-md */
+    font-size: 0.875rem; /* text-sm */
+    color: #6b7280; /* text-gray-500 */
+    font-weight: 500; /* font-medium */
+}
+
+/* 图片条幅区 */
+.detail-image-strip {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* shadow-2xl */
+    overflow: hidden;
+    padding-bottom: 3rem; /* pb-12 */
+}
+
+.detail-image-wrapper {
+    width: 100%;
+    max-width: 1440px; /* max-w-[1440px] */
+    position: relative;
+}
+
+/* 图片占位符样式 */
+.placeholder-style {
+    width: 100%;
+    background-color: #e5e7eb; /* bg-gray-200 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af; /* text-gray-400 */
+    font-family: monospace;
+    font-size: 1.25rem; /* text-xl */
+    border-bottom: 1px solid #f3f4f6; /* border-b border-gray-100 */
+}
+
+/* 详情页 Footer */
+.detail-footer {
+    width: 100%;
+    padding-top: 3rem; /* py-12 */
+    padding-bottom: 3rem; /* py-12 */
+    background-color: #f9fafb; /* bg-gray-50 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af; /* text-gray-400 */
+}
+
+.detail-footer-button {
+    margin-top: 1rem; /* mt-4 */
+    color: #2563eb; /* text-blue-600 */
+    transition: text-decoration 150ms;
+}
+.detail-footer-button:hover {
+    text-decoration: underline; /* hover:underline */
+}
+
+/* --- 底部 Footer --- */
+.simple-footer {
+    padding-top: 1.5rem; /* py-6 */
+    padding-bottom: 1.5rem; /* py-6 */
+    text-align: center;
+    color: rgba(93, 64, 55, 0.6); /* text-[#5d4037]/60 */
+    font-size: 0.875rem; /* text-sm */
+}
+
+/* --- 动画 --- */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- Lucide Icon 样式 (自定义) --- */
+.icon-base {
+    width: 3rem; /* w-12 */
+    height: 3rem; /* h-12 */
+    color: white;
+    opacity: 0.8;
+}
+
+/* --- 面包机 Toaster Object (复杂元素) --- */
+.toaster-object {
+    position: relative;
+    width: 9rem; /* w-36 */
+    height: 8rem; /* h-32 */
+    cursor: pointer;
+    perspective: 1000px;
+    margin: 0.5rem 1rem; /* mx-4 my-2 */
+    transition: transform 300ms;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 20;
+}
+.toaster-object:hover {
+    transform: translateY(-0.5rem); /* hover:-translate-y-2 */
+}
+@media (min-width: 768px) {
+    .toaster-object {
+        width: 10rem; /* md:w-40 */
+        height: 9rem; /* md:h-36 */
+    }
+}
+@media (min-width: 1024px) {
+    .toaster-object {
+        width: 11rem; /* lg:w-44 */
+        height: 10rem; /* lg:h-40 */
+    }
+}
+/* 更多面包机样式...（省略，请自行将剩余 Tailwind 类转换为 CSS） */
+
+/* --- 绿植 Plant (复杂元素) --- */
+.realistic-plant {
+    position: relative;
+    width: 8rem; /* w-32 */
+    height: 12rem; /* h-48 */
+    margin: 0.5rem 1rem; /* mx-4 my-2 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    z-index: 20;
+    pointer-events: none;
+}
+@media (min-width: 768px) {
+    .realistic-plant {
+        height: 14rem; /* md:h-56 */
+    }
+}
+/* 更多绿植样式...（省略，请自行将剩余 Tailwind 类转换为 CSS） */
+
+
+/* --- 联系卡 Contact Card --- */
+.contact-card {
+    position: relative;
+    width: 8rem; /* w-32 */
+    height: 10rem; /* h-40 */
+    cursor: default;
+    margin: 0.5rem 1rem; /* mx-4 my-2 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+@media (min-width: 768px) {
+    .contact-card {
+        height: 11rem; /* md:h-44 */
+    }
+}
+@media (min-width: 1024px) {
+    .contact-card {
+        width: 9rem; /* lg:w-36 */
+        height: 12rem; /* lg:h-48 */
+    }
+}
+/* 更多卡片样式...（省略，请自行将剩余 Tailwind 类转换为 CSS） */
+
+/* --- 动态类 (需要JS配合) --- */
+.hover-translate-y-2 {
+    transition: transform 300ms;
+}
+.hover-translate-y-2:hover {
+    transform: translateY(-0.5rem);
+}
