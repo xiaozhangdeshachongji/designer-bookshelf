@@ -272,11 +272,7 @@ const ContactCard = () => {
           <User className="text-gray-600" size={24} />
         </div>
         <h4 className="font-bold text-gray-800 text-sm">联系我</h4>
-        <div className="flex gap-3 mt-3 text-gray-600">
-          <a href="#" className="hover:text-blue-600 transition-colors"><Mail size={16} /></a>
-          <a href="#" className="hover:text-blue-600 transition-colors"><Linkedin size={16} /></a>
-          <a href="#" className="hover:text-pink-600 transition-colors"><Dribbble size={16} /></a>
-        </div>
+    
       </div>
     </div>
   );
