@@ -150,7 +150,7 @@ const Book = ({ project, onClick }) => {
 // 新增：使用图片代替复杂 CSS 的面包机组件
 const ToasterObject = ({ project, onClick }) => {
   // 注意：假设您的图片文件名为 'toaster.png' 且放在 public 文件夹
-  const imagePath = '/toaster.png'; 
+  const imagePath = '/toaster2.webp'; 
     
   return (
     <div 
@@ -158,8 +158,8 @@ const ToasterObject = ({ project, onClick }) => {
       // 保持最外层类名，使用内联 style 强制设置尺寸
       className="toaster-object group" 
       style={{ 
-          width: '10rem', // 10rem = 160px
-          height: '10rem', // 10rem = 160px
+          width: '9.4rem', // 10rem = 160px
+          height: '12rem', // 10rem = 160px
           display: 'flex', 
           alignItems: 'flex-end',
           justifyContent: 'center',
