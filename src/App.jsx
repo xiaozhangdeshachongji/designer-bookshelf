@@ -15,13 +15,18 @@ const PROJECTS = [
   // --- 第一排 ---
   {
     id: 1,
-    title: "油柑网",
+    title: "油柑网 B2B 电子元器件商城设计",
     category: "Web Platform",
     // 转换为实际颜色值
     color: "#65a30d", // from-lime-600 to-green-800
     spineColor: "#14532d", // bg-green-900
     coverIcon: <Monitor className="icon-base" />,
-    description: "电子元器件采购平台，优化B端采购流程与搜索体验。",
+    description: `电子元器件采购平台设计。
+
+    我的主要工作是：
+    1. 优化B端采购流程与搜索体验，将搜索转化率提升X%。
+    2. 设计用户仪表盘，提高信息密度与操作效率。
+    3. 负责项目的视觉风格统一和组件库建设。`,
     images: ["/api/placeholder/1440/900", "/api/placeholder/1440/1400"]
   },
   {
@@ -314,30 +319,48 @@ const ProjectDetail = ({ project, onClose }) => {
       </div>
 
       {/* The Long Image Strip (1440px width logic) */}
-      <div className="detail-image-strip">
-        {project.images.map((imgSrc, index) => (
-          <div key={index} className="detail-image-wrapper">
-            {/* Using placeholder styling to simulate the design mocks. */}
-            <div 
-              className={`placeholder-style`} 
-              style={{ 
-                height: index === 0 ? '800px' : index === 1 ? '1200px' : '1000px', 
-                backgroundColor: index % 2 === 0 ? '#fafafa' : '#ffffff' 
-              }}>
-                <div className="text-center p-4">
-                  <p className="mb-4">作品详情长图 - 切片 {index + 1}</p>
-                  <p className="text-sm opacity-60">Width: 1440px (Responsive) | Height: Variable</p>
-                  {/* ... 占位符内部样式保持原样，需要您后续手动调整 ... */}
+      <div className="detail-image-strip" style={{
+            maxWidth: '1200px', // ⬅️ 核心：限制所有详情图的最大宽度
+            margin: '0 auto',    // ⬅️ 核心：将容器居中
+            padding: '0 20px',   // 左右增加内边距，防止在大屏上贴边
+            width: '100%',       // 确保容器在小屏幕上正常收缩
+        }}>
+        
+    
+        {/* 检查项目 ID 是否为 1 (油柑网) */}
+        {project.id === 1 ? (
+          
+            // --- ID 1: 油柑网的图片 ---
+            <>
+                <img src="/youganweb1.webp" alt="油柑网项目设计细节1" style={{ width: '100%', height: 'auto', display: 'block' }} loading="lazy" />
+                <img src="/youganweb2.webp" alt="油柑网项目设计细节2" style={{ width: '100%', height: 'auto', display: 'block' }} loading="lazy" />
+                <img src="/youganweb3.webp" alt="油柑网项目设计细节3" style={{ width: '100%', height: 'auto', display: 'block' }} loading="lazy" />
+            </>
+        ) : (
+            // --- 其他项目: 保持原来的占位符映射逻辑 ---
+            project.images.map((imgSrc, index) => (
+                <div key={index} className="detail-image-wrapper">
+                    <div 
+                      className={`placeholder-style`} 
+                      style={{ 
+                        height: index === 0 ? '800px' : index === 1 ? '1200px' : '1000px', 
+                        backgroundColor: index % 2 === 0 ? '#fafafa' : '#ffffff' 
+                      }}>
+                        <div className="text-center p-4">
+                          <p className="mb-4">作品详情长图 - 切片 {index + 1}</p>
+                          <p className="text-sm opacity-60">Width: 1440px (Responsive) | Height: Variable</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-          </div>
-        ))}
+            ))
+        )}
+
+
       </div>
 
       {/* Footer in Detail View */}
       <div className="detail-footer">
-        <p>感谢观看</p>
-        <button onClick={onClose} className="detail-footer-button">回到主页</button>
+       
       </div>
     </div>
   );
