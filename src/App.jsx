@@ -150,7 +150,7 @@ const Book = ({ project, onClick }) => {
 // 新增：使用图片代替复杂 CSS 的面包机组件
 const ToasterObject = ({ project, onClick }) => {
   // 注意：假设您的图片文件名为 'toaster.png' 且放在 public 文件夹
-  const imagePath = '/toaster2.webp'; 
+  const imagePath = '/toaster3.webp'; 
     
   return (
     <div 
