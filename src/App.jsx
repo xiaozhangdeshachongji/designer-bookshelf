@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Mail, Linkedin, Dribbble, User, Star, Monitor, Smartphone, Layout, ShoppingBag, Map, Car, Zap } from 'lucide-react';
+import { ArrowLeft, Mail, Linkedin, Dribbble, User, Star, Monitor, Smartphone, Layout, ShoppingBag, Map, Car, Zap,ChevronLeft } from 'lucide-react';
 
 // 导入常规 CSS 文件
 import './PortfolioStyles.css'; 
@@ -27,7 +27,12 @@ const PROJECTS = [
     1. 优化B端采购流程与搜索体验，将搜索转化率提升X%。
     2. 设计用户仪表盘，提高信息密度与操作效率。
     3. 负责项目的视觉风格统一和组件库建设。`,
-    images: ["/api/placeholder/1440/900", "/api/placeholder/1440/1400"]
+    images: [
+        "/youganweb1.webp",
+        "/youganweb2.webp",
+        "/youganweb3.webp"
+    ]
+    /*images: ["/api/placeholder/1440/900", "/api/placeholder/1440/1400"]*/
   },
   {
     id: 2,
@@ -37,7 +42,8 @@ const PROJECTS = [
     spineColor: "#7f1d1d", // bg-red-900
     coverIcon: <ShoppingBag className="icon-base" />,
     description: "移动端电商H5商城，专注于快速转化的轻量级购物体验。",
-    images: ["/api/placeholder/1440/1200", "/api/placeholder/1440/800"]
+      images: [ "/h51.webp", ]
+    // images: ["/api/placeholder/1440/1200", "/api/placeholder/1440/800"]
   },
   {
     id: 3,
@@ -47,17 +53,22 @@ const PROJECTS = [
     spineColor: "#3730a3", // bg-indigo-900
     coverIcon: <Star className="icon-base" />,
     description: "年度大促运营活动主视觉与交互页面设计，提升用户参与度。",
-    images: ["/api/placeholder/1440/2000"]
+     images: [
+        "/yyhd1.webp",
+        "/yyhd2.webp",
+    ]
+   /* images: ["/api/placeholder/1440/2000"]*/
   },
   {
     id: 4,
-    title: "Veryfit App",
+    title: "动哈运动",
     category: "Health App",
     color: "#06b6d4", // from-cyan-600 to-blue-700
     spineColor: "#1e3a8a", // bg-blue-900
     coverIcon: <Smartphone className="icon-base" />,
     description: "智能穿戴配套应用，运动数据可视化与健康监测。",
-    images: ["/api/placeholder/1440/1000", "/api/placeholder/1440/1600"]
+    images: [ "/dhyd1.webp", ]
+    /*images: ["/api/placeholder/1440/1000", "/api/placeholder/1440/1600"]*/
   },
   
   // --- 第二排 ---
@@ -79,7 +90,8 @@ const PROJECTS = [
     spineColor: "#0c0a09", // bg-stone-950
     coverIcon: <Map className="icon-base" />,
     description: "大型商业综合体线下导视屏幕系统设计，融合建筑美学。",
-    images: ["/api/placeholder/1440/1080", "/api/placeholder/1440/600"]
+    images: [ "/cdtgl1.webp", ]
+    /*images: ["/api/placeholder/1440/1080", "/api/placeholder/1440/600"]*/
   },
   {
     id: 7,
@@ -89,7 +101,12 @@ const PROJECTS = [
     spineColor: "#020617", // bg-slate-950
     coverIcon: <Car className="icon-base" />,
     description: "吉利汽车中控车机系统主题皮肤设计，打造沉浸式驾驶舱。",
-    images: ["/api/placeholder/1440/800", "/api/placeholder/1440/600"]
+    images: [
+        "/jl1.webp",
+        "/jl2.webp",
+        "/jl3.webp"
+    ]
+    // images: ["/api/placeholder/1440/800", "/api/placeholder/1440/600"]
   },
   {
     id: 8,
@@ -99,7 +116,9 @@ const PROJECTS = [
     spineColor: "#9a3412", // bg-orange-900
     coverIcon: <Layout className="icon-base" />,
     description: "智能家电触控屏交互设计，让烘焙更简单有趣。",
-    images: ["/api/placeholder/1440/1000"]
+    // 关键修正：将图片路径统一到 images 数组
+    images: ["/mbj1.webp"], 
+    detailImage: "/mbj1.webp", // 这个属性保留但不再用于渲染
   }
 ];
 
@@ -284,6 +303,31 @@ const ContactCard = () => {
 };
 
 const ProjectDetail = ({ project, onClose }) => {
+  // 1. 新增状态：跟踪用户是否滚动了页面 (🚨 移除注释)
+  const [isScrolled, setIsScrolled] = useState(false); // ⬅️ 新增状态
+
+  // 确保首次打开时滚动到顶部
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // 2. 监听滚动事件 // ⬅️ 新增逻辑
+  useEffect(() => {
+    const handleScroll = () => {
+      // 设定滚动阈值，例如超过 50 像素就视为已滚动
+      const scrolled = window.scrollY > 50; 
+      if (scrolled !== isScrolled) {
+        setIsScrolled(scrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    // 清除副作用：组件卸载时移除监听器
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isScrolled]);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -292,22 +336,23 @@ const ProjectDetail = ({ project, onClose }) => {
     <div className="detail-container">
       
       {/* Navigation Bar */}
-      <div className="detail-nav shadow-sm">
+      <div className={`detail-nav ${isScrolled ? 'scrolled-nav' : ''} shadow-sm`}>
         <div className="detail-nav-content">
           <button 
             onClick={onClose}
             className="detail-back-button"
           >
-            <ArrowLeft size={20} />
-            <span className="detail-back-text">返回书架</span>
+            <ChevronLeft size={24} />
+            <span className="detail-back-text">返回</span>
           </button>
           <h2 className="detail-nav-title">{project.title}</h2>
           <div className="detail-spacer"></div> {/* Spacer for balance */}
         </div>
       </div>
 
-      {/* Hero / Header Area */}
-      <div className="detail-hero">
+      {/* Hero / Header Area (包含标题、描述和标签) */}
+      
+      {/* <div className="detail-hero">
         <h1 className="detail-hero-title mb-6">{project.title}</h1>
         <p className="detail-hero-desc">
           {project.description}
@@ -316,47 +361,36 @@ const ProjectDetail = ({ project, onClose }) => {
           <span className="tag-item">{project.category}</span>
           <span className="tag-item">2024 Portfolio</span>
         </div>
-      </div>
+      </div> */}
 
-      {/* The Long Image Strip (1440px width logic) */}
+      {/* === 修正后的通用图片渲染逻辑 (放置在 detail-hero 之后) === */}
       <div className="detail-image-strip" style={{
-            maxWidth: '1200px', // ⬅️ 核心：限制所有详情图的最大宽度
-            margin: '0 auto',    // ⬅️ 核心：将容器居中
-            padding: '0 20px',   // 左右增加内边距，防止在大屏上贴边
-            width: '100%',       // 确保容器在小屏幕上正常收缩
-        }}>
-        
-    
-        {/* 检查项目 ID 是否为 1 (油柑网) */}
-        {project.id === 1 ? (
-          
-            // --- ID 1: 油柑网的图片 ---
-            <>
-                <img src="/youganweb1.webp" alt="油柑网项目设计细节1" style={{ width: '100%', height: 'auto', display: 'block' }} loading="lazy" />
-                <img src="/youganweb2.webp" alt="油柑网项目设计细节2" style={{ width: '100%', height: 'auto', display: 'block' }} loading="lazy" />
-                <img src="/youganweb3.webp" alt="油柑网项目设计细节3" style={{ width: '100%', height: 'auto', display: 'block' }} loading="lazy" />
-            </>
-        ) : (
-            // --- 其他项目: 保持原来的占位符映射逻辑 ---
-            project.images.map((imgSrc, index) => (
-                <div key={index} className="detail-image-wrapper">
-                    <div 
-                      className={`placeholder-style`} 
-                      style={{ 
-                        height: index === 0 ? '800px' : index === 1 ? '1200px' : '1000px', 
-                        backgroundColor: index % 2 === 0 ? '#fafafa' : '#ffffff' 
-                      }}>
-                        <div className="text-center p-4">
-                          <p className="mb-4">作品详情长图 - 切片 {index + 1}</p>
-                          <p className="text-sm opacity-60">Width: 1440px (Responsive) | Height: Variable</p>
-                        </div>
-                    </div>
-                </div>
-            ))
-        )}
+          maxWidth: '1200px', 
+          margin: '0 auto',    
+          padding: '0 20px',   
+          width: '100%',       
+      }}>
 
-
+          {/* 使用通用的 project.images 数组来渲染所有图片 */}
+          {project.images && project.images.map((imgSrc, index) => (
+              <img 
+                  key={index} 
+                  src={imgSrc}
+                  // 修正 alt 属性的语法
+                  alt={`${project.title} 详情图 ${index + 1}`} 
+                  className="detail-grid-image"
+                  style={{ 
+                      width: '100%', 
+                      height: 'auto', 
+                      display: 'block',
+                      // 为图片之间增加间距
+                      marginBottom: '3rem' 
+                  }} 
+                  loading="lazy" 
+              />
+          ))}
       </div>
+      {/* === END 通用图片渲染逻辑 === */}
 
       {/* Footer in Detail View */}
       <div className="detail-footer">
@@ -382,7 +416,7 @@ export default function App() {
           {/* Header */}
           <header className="header-area">
             <h1 className="header-title">
-              我的设计图书馆
+              测试
             </h1>
             <p className="header-paragraph">
               这里陈列着我的设计思考与实践。
