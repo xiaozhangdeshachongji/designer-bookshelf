@@ -1,456 +1,344 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Mail, Linkedin, Dribbble, User, Star, Monitor, Smartphone, Layout, ShoppingBag, Map, Car, Zap,ChevronLeft } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+// 图标库
+import { X, ChevronLeft, Zap, ArrowUpRight, Smile, Phone } from 'lucide-react'; 
 
-// 导入常规 CSS 文件
+// 导入 CSS
 import './PortfolioStyles.css'; 
-// 确保您在 src 文件夹下创建了这个文件，如果放在了 src/styles/ 文件夹，请修改路径
 
-// --- 模拟数据 (更新为8个指定项目) ---
-
-// 注意：原代码中的 color 和 spineColor 属性包含 Tailwind 颜色类 (如 from-lime-600)，
-// 为了兼容常规CSS，我们需要将其转换为实际的颜色值或CSS变量名。
-// 这里我们将其保持为变量名，并在下面的 Book 组件中使用 style 属性来应用颜色。
-
+// --- 模拟数据 ---
 const PROJECTS = [
-  // --- 第一排 ---
   {
     id: 1,
-    title: "油柑网 B2B 电子元器件商城设计",
-    category: "Web Platform",
-    // 转换为实际颜色值
-    color: "#65a30d", // from-lime-600 to-green-800
-    spineColor: "#14532d", // bg-green-900
-    coverIcon: <Monitor className="icon-base" />,
-    description: `电子元器件采购平台设计。
-
-    我的主要工作是：
-    1. 优化B端采购流程与搜索体验，将搜索转化率提升X%。
-    2. 设计用户仪表盘，提高信息密度与操作效率。
-    3. 负责项目的视觉风格统一和组件库建设。`,
-    images: [
-        "/youganweb1.webp",
-        "/youganweb2.webp",
-        "/youganweb3.webp"
-    ]
-    /*images: ["/api/placeholder/1440/900", "/api/placeholder/1440/1400"]*/
+    title: "华为手表test1",
+    tags: ["Web Platform", "从0到1"], 
+    coverImage: "/homepage1.webp", 
+    description: `电子元器件采购平台设计。我的主要工作是：1. 优化B端采购流程与搜索体验。2. 设计用户仪表盘。3. 负责项目的视觉风格统一和组件库建设。`,
+    images: ["/youganweb1.webp", "/youganweb2.webp", "/youganweb3.webp"]
   },
   {
     id: 2,
     title: "H5商城",
-    category: "Mobile Web",
-    color: "#f97316", // from-orange-500 to-red-600
-    spineColor: "#7f1d1d", // bg-red-900
-    coverIcon: <ShoppingBag className="icon-base" />,
+    tags: ["Mobile Web", "大版本更新"],
+    coverImage: "/homepage2.webp",
     description: "移动端电商H5商城，专注于快速转化的轻量级购物体验。",
-      images: [ "/h51.webp", ]
-    // images: ["/api/placeholder/1440/1200", "/api/placeholder/1440/800"]
+    images: [ "/h51.webp", ]
   },
   {
     id: 3,
     title: "运营活动",
-    category: "Campaign",
-    color: "#a855f7", // from-purple-500 to-indigo-600
-    spineColor: "#3730a3", // bg-indigo-900
-    coverIcon: <Star className="icon-base" />,
-    description: "年度大促运营活动主视觉与交互页面设计，提升用户参与度。",
-     images: [
-        "/yyhd1.webp",
-        "/yyhd2.webp",
-    ]
-   /* images: ["/api/placeholder/1440/2000"]*/
+    tags: ["Campaign", "高转化率"],
+    coverImage: "/homepage3.webp",
+    description: "年度大促运营活动主视觉与交互页面设计。",
+     images: [ "/yyhd1.webp", "/yyhd2.webp", ]
   },
   {
     id: 4,
     title: "动哈运动",
-    category: "Health App",
-    color: "#06b6d4", // from-cyan-600 to-blue-700
-    spineColor: "#1e3a8a", // bg-blue-900
-    coverIcon: <Smartphone className="icon-base" />,
+    tags: ["Health App", "数据可视化"],
+    coverImage: "/homepage4.webp",
     description: "智能穿戴配套应用，运动数据可视化与健康监测。",
     images: [ "/dhyd1.webp", ]
-    /*images: ["/api/placeholder/1440/1000", "/api/placeholder/1440/1600"]*/
   },
-  
-  // --- 第二排 ---
   {
     id: 5,
     title: "TPT Health App",
-    category: "Medical",
-    color: "#0d9488", // from-teal-600 to-emerald-800
-    spineColor: "#064e3b", // bg-emerald-900
-    coverIcon: <Zap className="icon-base" />,
-    description: "专业医疗健康管理平台，连接医生与患者的数字化桥梁。",
+    tags: ["Medical", "系统设计"],
+    coverImage: "/homepage5.webp",
+    description: "专业医疗健康管理平台。",
     images: ["/api/placeholder/1440/1100", "/api/placeholder/1440/1300"]
   },
   {
     id: 6,
     title: "成都太古里导航屏",
-    category: "Wayfinding",
-    color: "#44403c", // from-stone-700 to-stone-900
-    spineColor: "#0c0a09", // bg-stone-950
-    coverIcon: <Map className="icon-base" />,
-    description: "大型商业综合体线下导视屏幕系统设计，融合建筑美学。",
+    tags: ["Wayfinding", "线下体验"],
+    coverImage: "/homepage6.webp",
+    description: "大型商业综合体线下导视屏幕系统设计。",
     images: [ "/cdtgl1.webp", ]
-    /*images: ["/api/placeholder/1440/1080", "/api/placeholder/1440/600"]*/
   },
   {
     id: 7,
     title: "吉利汽车皮肤",
-    category: "HMI Design",
-    color: "#1e40af", // from-blue-800 to-slate-900
-    spineColor: "#020617", // bg-slate-950
-    coverIcon: <Car className="icon-base" />,
-    description: "吉利汽车中控车机系统主题皮肤设计，打造沉浸式驾驶舱。",
-    images: [
-        "/jl1.webp",
-        "/jl2.webp",
-        "/jl3.webp"
-    ]
-    // images: ["/api/placeholder/1440/800", "/api/placeholder/1440/600"]
+    tags: ["HMI Design", "智能硬件"],
+    coverImage: "/homepage7.webp",
+    description: "吉利汽车中控车机系统主题皮肤设计。",
+    images: [ "/jl1.webp", "/jl2.webp", "/jl3.webp" ]
   },
   {
     id: 8,
     title: "智能面包机",
-    category: "IoT Device",
-    color: "#f59e0b", // from-amber-500 to-orange-700
-    spineColor: "#9a3412", // bg-orange-900
-    coverIcon: <Layout className="icon-base" />,
-    description: "智能家电触控屏交互设计，让烘焙更简单有趣。",
-    // 关键修正：将图片路径统一到 images 数组
-    images: ["/mbj1.webp"], 
-    detailImage: "/mbj1.webp", // 这个属性保留但不再用于渲染
+    tags: ["IoT Device", "硬件交互"],
+    coverImage: "/homepage8.webp", 
+    description: "智能家电触控屏交互设计。",
+    images: ["/mbj1.webp","/mbj2.webp"], 
+  },
+    {
+    id: 9,
+    title: "智能医疗手表",
+    tags: ["智能硬件", "独立完成"],
+    coverImage: "/homepage9.webp", 
+    description: "可以测量健康数据的智能手表",
+    images: ["/watch1.webp","/watch2.webp"], 
   }
 ];
 
-// --- 组件部分 ---
-
-const Book = ({ project, onClick }) => {
-  // 使用内联样式来处理渐变和书脊颜色
-  const coverStyle = {
-    background: `linear-gradient(to bottom right, ${project.color}, ${project.spineColor})`,
-  };
+// --- ProjectCard 组件 ---
+const ProjectCard = ({ project, onClick }) => {
+  const coverSrc = project.coverImage || "/api/placeholder/600/600";
   
   return (
     <div 
+      className={`project-card`} 
       onClick={() => onClick(project)}
-      className="book-card group" // 使用新的常规 CSS 类
+      onMouseEnter={(e) => document.body.classList.add('hover-active')}
+      onMouseLeave={(e) => document.body.classList.remove('hover-active')}
     >
-      {/* Book Spine (3D Effect) */}
-      <div 
-        className="book-spine shadow-lg transform origin-right" 
-        style={{ backgroundColor: project.spineColor }} // 应用书脊颜色
-      ></div>
-
-      {/* Book Cover */}
-      <div 
-        className="book-cover shadow-xl flex flex-col p-3 md:p-4 justify-between items-center text-center transform transition-all duration-300 border-l-2 border-white/10"
-        style={coverStyle} // 应用渐变颜色
-      >
-        
-        {/* Top Decoration */}
-        <div className="cover-top-deco">
-          <span className="cover-category">{project.category}</span>
-        </div>
-
-        {/* Icon/Visual */}
-        <div className="cover-icon-wrapper transition-transform duration-300 scale-75 md:scale-100">
-          {project.coverIcon}
-        </div>
-
-        {/* Title */}
-        <div className="cover-title-wrapper h-12">
-          <h3 className="cover-title drop-shadow-md">
-            {project.title}
-          </h3>
-        </div>
-      </div>
-
-      {/* Pages Effect (Bottom) */}
-      <div className="book-pages-effect shadow-inner"></div>
-    </div>
-  );
-};
-
-// 新增：使用图片代替复杂 CSS 的面包机组件
-const ToasterObject = ({ project, onClick }) => {
-  // 注意：假设您的图片文件名为 'toaster.png' 且放在 public 文件夹
-  const imagePath = '/toaster3.webp'; 
-    
-  return (
-    <div 
-      onClick={() => onClick(project)}
-      // 保持最外层类名，使用内联 style 强制设置尺寸
-      className="toaster-object group" 
-      style={{ 
-          width: '9.4rem', // 10rem = 160px
-          height: '12rem', // 10rem = 160px
-          display: 'flex', 
-          alignItems: 'flex-end',
-          justifyContent: 'center',
-          perspective: '1000px',
-      }}
-    >
-      <div 
-        className="relative w-full h-full flex items-end justify-center hover-translate-y-2"
-        // 悬停动画：用内联 style 实现 hover:-translate-y-2 的效果
-        style={{
-          transition: 'transform 300ms',
-          transform: 'translateY(0)',
-        }}
-      >
-        {/* 使用 <img> 标签加载图片 */}
+      <div className="card-image-wrapper">
         <img 
-          src={imagePath} 
+          src={coverSrc} 
           alt={project.title} 
-          // 确保图片宽度自适应，并保持底部对齐
-          style={{ width: '100%', height: 'auto', display: 'block' }}
+          className="card-image" 
+          loading="lazy"
         />
-      </div>
-      
-      {/* 底部阴影 (保持原样) */}
-      <div className="absolute -bottom-1 w-[90%] h-3 bg-black/20 blur-md rounded-full z-0"></div>
-    </div>
-  );
-};
-const RealisticPlant = () => (
-  <div className="realistic-plant group z-20 pointer-events-none">
-    {/* 植物主体容器... (此处省略，保持原 Tailwind 样式，需要您后续手动调整) */}
-    <div className="absolute bottom-12 w-full flex justify-center items-end">
-        
-       {/* 茎 (Stems) */}
-       <div className="absolute bottom-0 w-1 h-24 bg-stone-700 transform -rotate-6 origin-bottom rounded-full"></div>
-       <div className="absolute bottom-0 w-1 h-20 bg-stone-600 transform rotate-6 origin-bottom rounded-full"></div>
-        
-       {/* 叶片 1 (左下) */}
-       <div className="absolute bottom-10 -left-6 w-16 h-20 rounded-[50%_50%_50%_5px] bg-gradient-to-br from-emerald-500 to-green-800 transform -rotate-[70deg] origin-bottom-right shadow-sm border-t border-emerald-400/30 group-hover:-rotate-[75deg] transition-transform duration-700 ease-in-out">
-          <div className="absolute w-[1px] h-full bg-emerald-900/10 left-1/2 rotate-3"></div>
-       </div>
-
-       {/* 叶片 2 (右下) */}
-       <div className="absolute bottom-12 -right-4 w-14 h-18 rounded-[50%_5px_50%_50%] bg-gradient-to-bl from-emerald-400 to-green-700 transform rotate-[60deg] origin-bottom-left shadow-sm border-t border-emerald-300/30 group-hover:rotate-[65deg] transition-transform duration-700 delay-75">
-          <div className="absolute w-[1px] h-full bg-emerald-900/10 left-1/2 -rotate-3"></div>
-       </div>
-
-       {/* 叶片 3 (中上 - 主叶) */}
-       <div className="absolute bottom-20 w-16 h-24 rounded-[50%_50%_5px_50%] bg-gradient-to-b from-emerald-400 to-green-800 transform -rotate-6 shadow-md border-t border-emerald-300/40 z-10 group-hover:-rotate-3 transition-transform duration-1000">
-          <div className="absolute w-[1px] h-full bg-emerald-900/10 left-1/2"></div>
-       </div>
-
-       {/* 叶片 4 (右上) */}
-       <div className="absolute bottom-16 left-6 w-12 h-16 rounded-[5px_50%_50%_50%] bg-gradient-to-bl from-lime-500 to-emerald-700 transform rotate-[30deg] origin-bottom-left shadow-sm z-0"></div>
-
-       {/* 叶片 5 (左上 - 嫩叶) */}
-       <div className="absolute bottom-24 -left-2 w-10 h-14 rounded-[50%_5px_50%_50%] bg-gradient-to-tr from-lime-400 to-emerald-600 transform -rotate-[20deg] origin-bottom-right shadow-sm z-0"></div>
-    </div>
-    
-    {/* 花盆 (Pot) - 增加纹理和立体感 */}
-    <div className="relative w-24 h-20 z-20">
-      {/* 盆沿 */}
-      <div className="absolute top-0 w-full h-4 bg-[#d4c5b0] rounded-sm shadow-md z-30 flex items-center justify-center border-t border-white/40"></div>
-      
-      {/* 盆体 */}
-      <div className="absolute top-2 left-1 right-1 bottom-0 bg-gradient-to-b from-[#e6dccf] to-[#cbbba4] shadow-inner rounded-b-lg flex flex-col items-center justify-center overflow-hidden">
-        {/* 盆体纹理装饰 */}
-        <div className="w-full h-px bg-stone-400/20 mb-1"></div>
-        <div className="w-full h-px bg-stone-400/20 mb-1"></div>
-        <div className="w-12 h-12 rounded-full border-2 border-stone-400/10 mt-2"></div>
-      </div>
-    </div>
-    
-    {/* 底部阴影 */}
-    <div className="absolute -bottom-1 w-20 h-3 bg-black/20 blur-md rounded-full z-10"></div>
-  </div>
-);
-
-const Shelf = ({ children }) => {
-  // 使用内联样式来处理复杂的背景图案
-  const woodGrainStyle = {
-    backgroundImage: "url('https://www.transparenttextures.com/patterns/wood-pattern.png')",
-  };
-  
-  return (
-    <div className="shelf-container">
-      <div className="shelf-content">
-        {children}
-      </div>
-      {/* Wood Shelf Visual */}
-      <div className="shelf-wood">
-        <div className="shelf-gradient"></div>
-        <div className="shelf-grain" style={woodGrainStyle}></div>
-      </div>
-      {/* Shadow under shelf */}
-      <div className="shelf-shadow"></div>
-    </div>
-  );
-};
-
-const ContactCard = () => {
-  return (
-    <div className="contact-card group">
-      {/* The Card Holder */}
-      <div className="absolute bottom-0 w-16 h-4 bg-gray-800 rounded-sm shadow-md z-20"></div>
-      
-      {/* The Card Itself */}
-      <div className="relative bg-white w-full h-[90%] p-4 shadow-md rounded-sm border border-gray-200 flex flex-col items-center justify-center text-center transform transition-transform duration-300 group-hover:-translate-y-2 z-10">
-        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3">
-          <User className="text-gray-600" size={24} />
+        <div className="card-overlay">
+            {/* <span className="view-project-btn">查看项目 <ArrowUpRight size={24}/></span> */}
         </div>
-        <h4 className="font-bold text-gray-800 text-sm">联系我</h4>
-    
+      </div>
+      <div className="card-info">
+        <h3 className="card-title">{project.title}</h3>
+        <div className="card-tags-area">
+          {project.tags && project.tags.slice(0, 2).map((tag, i) => ( 
+            <span key={i} className="project-tag-item">
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-const ProjectDetail = ({ project, onClose }) => {
-  // 1. 新增状态：跟踪用户是否滚动了页面 (🚨 移除注释)
-  const [isScrolled, setIsScrolled] = useState(false); // ⬅️ 新增状态
+// --- ContactModalLarge 组件 (名片：酷炫进出场) ---
+const ContactModalLarge = ({ onClose }) => {
+    // 挂载时的动画状态管理
+    const [isClosing, setIsClosing] = useState(false);
+    
+    // 修复 1：进入名片组件时，强制清除 hover-active 类
+    useEffect(() => { 
+        document.body.classList.remove('hover-active');
+    }, []);
 
-  // 确保首次打开时滚动到顶部
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    const handleClose = () => {
+        setIsClosing(true);
+        // 等待动画结束后再卸载组件
+        setTimeout(onClose, 500); 
+    };
 
-  // 2. 监听滚动事件 // ⬅️ 新增逻辑
+    return (
+        <div className={`modal-backdrop ${isClosing ? 'closing' : ''}`}>
+            <div className={`contact-modal-card-large ${isClosing ? 'closing' : ''}`}>
+                <div 
+                    className="modal-close-trigger" 
+                    onClick={handleClose}
+                    onMouseEnter={() => document.body.classList.add('hover-active')}
+                    onMouseLeave={() => document.body.classList.remove('hover-active')}
+                >
+                    <X size={32} />
+                </div>
+                
+                <div className="modal-inner-layout">
+                    {/* 左侧 */}
+                    <div className="modal-left">
+                         <div className="modal-avatar-box">
+                            <img src="/avatar-placeholder.webp" alt="Avatar" className="modal-avatar-img"/>
+                        </div>
+                        <h1 className="modal-hero-text">
+                            DESIGNER<br/>
+                            <span className="modal-hero-name">NAME / 名字</span>
+                        </h1>
+                        <p className="modal-bio-text">
+                            跨领域 UI/UX 设计师 <strong>[B2B / 医疗 / 智能硬件]</strong>。<br/>
+                            以极简美学和数据驱动，构建未来的数字体验。
+                        </p>
+                    </div>
+
+                    {/* 右侧 */}
+                    <div className="modal-right">
+                        <div className="modal-contact-group">
+                            <label>PHONE</label>
+                            <div className="contact-value">+86 13670028871</div>
+                        </div>
+                        <div className="modal-contact-group">
+                            <label>WECHAT</label>
+                            <div className="contact-value">ccolor0702</div>
+                        </div>
+                        <div className="modal-contact-group">
+                            <label>EMAIL</label>
+                            <div className="contact-value">939790480@qq.com</div>
+                        </div>
+                        {/* <div className="modal-contact-group">
+                            <label>LINKEDIN</label>
+                            <div className="contact-value">linkedin.com/in/me</div>
+                        </div> */}
+                    </div>
+                </div>
+
+                <div className="modal-footer-deco">
+                    PORTFOLIO 2025 © CONNECT ME
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// --- StarryBackground ---
+const StarryBackground = () => {
+    return (
+        <div className="starry-background">
+            <div id="stars1"></div> 
+            <div id="stars2"></div> 
+            <div id="stars3"></div> 
+        </div>
+    );
+};
+
+// --- CustomCursor (优化：0延迟 DOM操作) ---
+const CustomCursor = () => {
+  const cursorRef = useRef(null);
+
   useEffect(() => {
-    const handleScroll = () => {
-      // 设定滚动阈值，例如超过 50 像素就视为已滚动
-      const scrolled = window.scrollY > 50; 
-      if (scrolled !== isScrolled) {
-        setIsScrolled(scrolled);
+    const moveCursor = (e) => {
+      if (cursorRef.current) {
+        // 直接操作 DOM style，跳过 React 渲染周期，实现 0 延迟
+        // translate3d 开启硬件加速
+        cursorRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
       }
     };
-
-    window.addEventListener('scroll', handleScroll);
     
-    // 清除副作用：组件卸载时移除监听器
+    // 监听鼠标点击态
+    const mouseDown = () => cursorRef.current?.classList.add('clicked');
+    const mouseUp = () => cursorRef.current?.classList.remove('clicked');
+
+    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('mousedown', mouseDown);
+    window.addEventListener('mouseup', mouseUp);
+    
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', moveCursor);
+      window.removeEventListener('mousedown', mouseDown);
+      window.removeEventListener('mouseup', mouseUp);
     };
-  }, [isScrolled]);
-  useEffect(() => {
-    window.scrollTo(0, 0);
+  }, []);
+
+  return <div ref={cursorRef} className="custom-cursor" />;
+};
+
+// --- ProjectDetail 组件 (优化：头部对齐与转场) ---
+const ProjectDetail = ({ project, onClose }) => {
+  // 挂载时滚动到顶部 & 修复 2：进入详情页时，强制重置光标为小圆点
+  useEffect(() => { 
+    window.scrollTo(0, 0); 
+    document.body.classList.remove('hover-active');
   }, []);
 
   return (
     <div className="detail-container">
-      
-      {/* Navigation Bar */}
-      <div className={`detail-nav ${isScrolled ? 'scrolled-nav' : ''} shadow-sm`}>
-        <div className="detail-nav-content">
+      {/* 顶部固定导航 */}
+      <div className="detail-nav-fixed">
+        <div className="detail-nav-inner">
           <button 
-            onClick={onClose}
-            className="detail-back-button"
+            onClick={onClose} 
+            className="detail-back-btn"
+            // 修复 3：返回按钮添加光标放大交互
+            onMouseEnter={() => document.body.classList.add('hover-active')}
+            onMouseLeave={() => document.body.classList.remove('hover-active')}
           >
-            <ChevronLeft size={24} />
-            <span className="detail-back-text">返回</span>
+            <ChevronLeft size={40
+            } /> <span className="back-text">BACK</span>
           </button>
-          <h2 className="detail-nav-title">{project.title}</h2>
-          <div className="detail-spacer"></div> {/* Spacer for balance */}
+          <span className="detail-title-center">{project.title}</span>
+          <div style={{width: '60px'}}></div> 
         </div>
       </div>
 
-      {/* Hero / Header Area (包含标题、描述和标签) */}
-      
-      {/* <div className="detail-hero">
-        <h1 className="detail-hero-title mb-6">{project.title}</h1>
-        <p className="detail-hero-desc">
-          {project.description}
-        </p>
-        <div className="detail-hero-tags">
-          <span className="tag-item">{project.category}</span>
-          <span className="tag-item">2024 Portfolio</span>
+      {/* 详情页头部信息 - 增加 enter 动画类 */}
+      <div className="detail-hero-section animate-enter">
+        <div className="detail-hero-content">
+            {/* 标题动画衔接感 */}
+            <h1 className="detail-big-title">{project.title}</h1>
+            <div className="detail-tags-row">
+                {/* <span className="detail-uid">NO. {project.id < 10 ? `0${project.id}` : project.id}</span> */}
+                {project.tags.map((t, i) => <span key={i} className="detail-tag">{t}</span>)}
+            </div>
+            <p className="detail-desc">{project.description}</p>
         </div>
-      </div> */}
+      </div>
 
-      {/* === 修正后的通用图片渲染逻辑 (放置在 detail-hero 之后) === */}
-      <div className="detail-image-strip" style={{
-          maxWidth: '1200px', 
-          margin: '0 auto',    
-          padding: '0 20px',   
-          width: '100%',       
-      }}>
-
-          {/* 使用通用的 project.images 数组来渲染所有图片 */}
+      {/* 详情页图片列表 */}
+      <div className="detail-images-container animate-enter-delay">
           {project.images && project.images.map((imgSrc, index) => (
-              <img 
-                  key={index} 
-                  src={imgSrc}
-                  // 修正 alt 属性的语法
-                  alt={`${project.title} 详情图 ${index + 1}`} 
-                  className="detail-grid-image"
-                  style={{ 
-                      width: '100%', 
-                      height: 'auto', 
-                      display: 'block',
-                      // 为图片之间增加间距
-                      marginBottom: '3rem' 
-                  }} 
-                  loading="lazy" 
-              />
+              <img key={index} src={imgSrc} alt="Detail" className="detail-img-item" loading="lazy" />
           ))}
-      </div>
-      {/* === END 通用图片渲染逻辑 === */}
-
-      {/* Footer in Detail View */}
-      <div className="detail-footer">
-       
       </div>
     </div>
   );
 };
 
+// --- App 组件 ---
 export default function App() {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [isContactModalOpen, setIsContactModal] = useState(false); 
 
   return (
     <div className="app-container">
-      
+      <StarryBackground /> 
+      <CustomCursor />
+
+      {/* 名片弹窗 */}
+      {isContactModalOpen && <ContactModalLarge onClose={() => setIsContactModal(false)} />}
+
       {selectedProject ? (
         <ProjectDetail 
           project={selectedProject} 
           onClose={() => setSelectedProject(null)} 
         />
       ) : (
-        <div className="flex flex-col min-h-screen">
-          {/* Header */}
-          <header className="header-area">
-            <h1 className="header-title">
-              测试
-            </h1>
-            <p className="header-paragraph">
-              这里陈列着我的设计思考与实践。
-              <br className="header-text-hidden-md" />
-              点击书籍查看完整项目长图。
-            </p>
+        // 首页内容
+        <div className="homepage-content">
+          <header className="header-section">
+            <div className="header-inner">
+                <h1 className="main-logo">DESIGN WORKS <span className="dot">.</span></h1>
+                <p className="main-subtitle">UI/UX & PRODUCT DESIGNER</p>
+                
+                <div className="header-bottom-row">
+                    <p className="header-bio">
+                        致力于 B2B、健康医疗与智能硬件的交互设计。<br/>
+                        用极简主义和先锋艺术构建数字体验。
+                    </p>
+                    <button 
+                        onClick={() => setIsContactModal(true)} 
+                        className="connect-btn"
+                        onMouseEnter={(e) => document.body.classList.add('hover-active')}
+                        onMouseLeave={(e) => document.body.classList.remove('hover-active')}
+                    >
+                        <Smile size={40} color="currentColor" />
+                        <span>联系一下</span>
+                    </button>
+                </div>
+            </div>
           </header>
 
-          {/* Bookshelves Area */}
-          <main className="main-content">
-            
-            {/* Shelf 1: Projects 1-4 + Plant */}
-            <Shelf>
-              {PROJECTS.slice(0, 4).map(proj => (
-                <Book key={proj.id} project={proj} onClick={setSelectedProject} />
-              ))}
-              <RealisticPlant /> 
-            </Shelf>
-
-            {/* Shelf 2: Projects 5-8 + Contact */}
-            <Shelf>
-              {PROJECTS.slice(4, 7).map(proj => (
-                <Book key={proj.id} project={proj} onClick={setSelectedProject} />
-              ))}
-              {/* 第8个项目现在是面包机 */}
-              <ToasterObject project={PROJECTS[7]} onClick={setSelectedProject} />
-              <ContactCard />
-            </Shelf>
-
+          <main className="projects-grid-section">
+            {PROJECTS.map((proj) => (
+              <ProjectCard 
+                key={proj.id} 
+                project={proj} 
+                onClick={setSelectedProject} 
+              />
+            ))}
           </main>
 
-          {/* Simple Footer */}
           <footer className="simple-footer">
-            <p>&copy; {new Date().getFullYear()} UI Designer Portfolio. Made with React & Vanilla CSS.</p>
+            <p>© 2025 DESIGN PORTFOLIO. ALL RIGHTS RESERVED.</p>
           </footer>
         </div>
       )}
